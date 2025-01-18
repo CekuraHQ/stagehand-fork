@@ -4883,6 +4883,11 @@ function getBrowser(apiKey, projectId, env = "LOCAL", headless = false, logger, 
           }
         }
       });
+      if (process.env.CHROMIUM_CDP) {
+        const browser = yield import_test.chromium.connectOverCDP(process.env.CHROMIUM_CDP);
+        const context2 = browser.contexts()[0];
+        return { context: context2, env: "LOCAL" };
+      }
       const tmpDirPath = import_path2.default.join(import_os.default.tmpdir(), "stagehand");
       if (!import_fs2.default.existsSync(tmpDirPath)) {
         import_fs2.default.mkdirSync(tmpDirPath, { recursive: true });

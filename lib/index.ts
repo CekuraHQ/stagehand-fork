@@ -208,6 +208,14 @@ async function getBrowser(
       },
     });
 
+    // FORK: connect over CDP
+    // Check if there is an environment variable for USE_LOCAL_CHROME
+    if (process.env.CHROMIUM_CDP) {
+      const browser = await chromium.connectOverCDP(process.env.CHROMIUM_CDP);
+      const context = browser.contexts()[0];
+      return { context, env: "LOCAL" };
+    }
+
     const tmpDirPath = path.join(os.tmpdir(), "stagehand");
     if (!fs.existsSync(tmpDirPath)) {
       fs.mkdirSync(tmpDirPath, { recursive: true });
